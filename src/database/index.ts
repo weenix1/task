@@ -10,9 +10,9 @@ const createDatabase = async () => {
   try {
     const databaseName = 'bicycle_delivery'
     await client.query(`CREATE DATABASE ${databaseName}`)
-    console.log(`Database '${databaseName}' created successfully.`)
+    LogS.debug(`Database ${databaseName} created`)
   } catch (error) {
-    console.error('Error creating database:', error)
+    LogS.error('Error creating database', error)
   } finally {
     client.release()
   }
