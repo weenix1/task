@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import listEndpoints from 'express-list-endpoints'
 import cors from 'cors'
 import { DatabaseService } from './database'
