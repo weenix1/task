@@ -9,11 +9,14 @@ const API = axios.create({
   baseURL: `${apiUrl}`,
 })
 
+const username = process.env.AUTH_USERNAME || 'defaultUsername'
+const password = process.env.AUTH_PASSWORD || 'defaultPassword'
+
 API.interceptors.request.use(
   async (config) => {
     config.auth = {
-      username: 'cargoboard',
-      password: 'so-and-board-10',
+      username: username,
+      password: password,
     }
     return config
   },
