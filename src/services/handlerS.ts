@@ -5,8 +5,7 @@ import { client } from '../database'
 import API from '../utils/axiosConfig'
 import rateLimitMiddlewareS from '../middleware/rateLimitMiddlewareS'
 import LogS from './LogS'
-
-const apiUrl = process.env.CARGO_API
+import { envS } from './EnvS'
 
 const routeCache: { [key: string]: Set<number> } = {}
 
@@ -43,7 +42,7 @@ const createNewOrder = async (req: Request, res: Response) => {
       } = orderData
 
       const distanceResponse = await API.get(
-        `${apiUrl}/${shipper_country}/${shipper_postcode}/${consignee_country}/${consignee_postcode}`,
+        `${envS.getCaregoApi()}/${shipper_country}/${shipper_postcode}/${consignee_country}/${consignee_postcode}`,
       )
 
       const distanceFromCargoAPI = distanceResponse.data.distance

@@ -1,20 +1,10 @@
 import { Pool, PoolClient } from 'pg'
 import dotenv from 'dotenv'
 import LogS from '../services/LogS'
+import { envS } from '../services/EnvS'
 dotenv.config()
 
 export let client: PoolClient
-const { PGDATABASE, PGUSER, PGPASSWORD, PGHOST, PGPORT } = process.env
-
-if (!PGPORT) {
-  throw new Error('PGPORT environment variable is not set.')
-}
-
-const port = parseInt(PGPORT, 10)
-
-if (isNaN(port)) {
-  throw new Error('PGPORT is not a valid number.')
-}
 
 const createDatabase = async () => {
   try {
@@ -30,11 +20,11 @@ const createDatabase = async () => {
 
 const connectToDatabase = async () => {
   const poolI = new Pool({
-    user: PGUSER,
-    host: PGHOST,
-    database: PGDATABASE,
-    password: PGPASSWORD,
-    port: port,
+    user: envS.getPgUser(),
+    host: envS.getPgHost(),
+    database: envS.getPgDatabase(),
+    password: envS.getPgPassword(),
+    port: envS.getPgPort(),
   })
 
   try {

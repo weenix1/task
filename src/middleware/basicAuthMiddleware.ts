@@ -1,10 +1,11 @@
 import basicAuth from 'express-basic-auth'
 import dotenv from 'dotenv'
+import { envS } from '../services/EnvS'
 dotenv.config()
 
 const users = {
-  [process.env.AUTH_USERNAME || 'defaultUsername']:
-    process.env.AUTH_PASSWORD || 'defaultPassword',
+  [envS.getAuthUsername() || 'defaultUsername']:
+    envS.getAuthPassword() || 'defaultPassword',
 }
 
 const basicAuthMiddleware = basicAuth({

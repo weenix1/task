@@ -4,6 +4,7 @@ import { app } from '..'
 import { Pool } from 'pg'
 import { client } from '../database'
 import basicAuthMiddleware from '../middleware/basicAuthMiddleware'
+import { envS } from '../services/EnvS'
 
 dotenv.config()
 
@@ -20,13 +21,12 @@ describe('Testing the app endpoints', () => {
     app.use(basicAuthMiddleware)
   })
   it('should establish a successful pg db connection', async () => {
-    const { PGUSER, PGHOST, PGDATABASE, PGPASSWORD, PGPORT } = process.env
     const pool = new Pool({
-      user: PGUSER,
-      password: PGPASSWORD,
-      host: PGHOST,
-      port: (PGPORT as unknown) as number,
-      database: PGDATABASE,
+      user: envS.getPgUser(),
+      password: envS.getAuthPassword(),
+      host: envS.getPgHost(),
+      port: envS.getPgPort(),
+      database: envS.getPgDatabase(),
     })
     const client = await pool.connect()
 
@@ -36,19 +36,17 @@ describe('Testing the app endpoints', () => {
   })
 
   it('should check that the GET /orders endpoint returns a list of orders', async () => {
-    const username = process.env.AUTH_USERNAME || 'defaultUsername'
-    const password = process.env.AUTH_PASSWORD || 'defaultPassword'
-    const response = await request.get('/orders').auth(username, password)
+    const response = await request
+      .get('/orders')
+      .auth(envS.getAuthUsername(), envS.getAuthPassword())
     expect(response.status).toBe(200)
     expect(response.body.length).toBeGreaterThan(0)
   })
 
   it(' should create a new order POST /orders endpoint', async () => {
-    const username = process.env.AUTH_USERNAME || 'defaultUsername'
-    const password = process.env.AUTH_PASSWORD || 'defaultPassword'
     const response = await request
       .post('/orders')
-      .auth(username, password)
+      .auth(envS.getAuthUsername(), envS.getAuthPassword())
       .send({
         shipper_country: 'DE',
         shipper_city: 'BL',
